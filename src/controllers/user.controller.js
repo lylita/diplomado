@@ -124,7 +124,12 @@ async function getTasks(req,res,next) {
     } 
 }
 async function getListPagination(req, res, next) {
-    const {page,limit,search,orderBy,orderDir} = req.query;
+    const {page,limit,orderBy,orderDir} = req.query;
+    let {search} = req.query
+    if (!search || search ==='undefined') {
+        search = '';
+    }
+    console.log(search);
     try {
         const users = await User.findAndCountAll({
             attributes: ['id', 'username', 'status'],
