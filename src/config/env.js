@@ -7,6 +7,7 @@ const config ={
     DB_PASSWORD: process.env.DB_PASSWORD,
     DB_DATABASE: process.env.DB_DATABASE,
     DB_DIALECT: process.env.DB_DIALECT ,
+    DB_USE_SSL: process.env.DB_USE_SSL ?? false,
 
     BCRYPT_SALT_ROUNDS: +process.env.BCRYPT_SALT_ROUNDS,
     JWT_SECRET: process.env.JWT_SECRET,
