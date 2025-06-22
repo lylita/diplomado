@@ -3,6 +3,9 @@ import { Task } from '../models/tasks.js';
 import { Status } from '../constants/index.js';
 import { encriptar } from '../common/bcrypt.js';
 
+import { Op } from 'sequelize';
+
+
 async function getUsers(req,res,next)
 {
     try {
@@ -104,8 +107,6 @@ async function activateInactivate(req, res, next) {
 }
 async function getTasks(req,res,next) {
     const {id} = req.params;
-    console.log(req.params);
-    console.log(req.user);
     try { 
         const user = await User.findOne({
                 include: [{
@@ -122,6 +123,31 @@ async function getTasks(req,res,next) {
         next(error);
     } 
 }
+async function getListPagination(req, res, next) {
+    const {page,limit,search,orderBy,orderDir} = req.query;
+    try {
+        const users = await User.findAndCountAll({
+            attributes: ['id', 'username', 'status'],
+            where:  {
+                    username: {
+                       [Op.like]: `%${search}%`
+                }
+            },
+            order:[[orderBy, orderDir]],
+            limit: parseInt(limit),
+            offset:(parseInt(page)-1)* parseInt(limit),
+        });
+        res.json({
+            
+            total: users.count,
+            page: parseInt(page),
+            pages: Math.ceil(users.count / limit),
+            data: users.rows,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
 export default{ 
     getUsers,
     createUser,
@@ -129,5 +155,6 @@ export default{
     updateUser,
     deleteUser,
     activateInactivate,
-    getTasks
+    getTasks,
+    getListPagination
 }

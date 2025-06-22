@@ -52,11 +52,6 @@ async function updateTask(req, res, next) {
     const { name} = req.body;
     const { userId } = req.user; // Assuming user ID is stored in req.user after authentication
     try {
-        /*if (!name) {
-            return res
-            .status(400)
-            .json({ message: 'Name is required' });
-        }*/
         const task = await Task.update({
             name,
         }, {
@@ -107,7 +102,7 @@ async function deleteTask(req, res, next) {
         if (task === 0) {
             return res.status(404).json({ message: 'Task not found' });
         }
-        res.json({ message: 'Task deleted successfully' });
+        res.status(204).json({message: 'Task deleted successfully'});
     }
     catch (error) {
         next(error);
