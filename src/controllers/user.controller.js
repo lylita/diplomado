@@ -124,12 +124,24 @@ async function getTasks(req,res,next) {
     } 
 }
 async function getListPagination(req, res, next) {
-    const {page,limit,orderBy,orderDir} = req.query;
-    let {search} = req.query
+    const {page,limit} = req.query;
+    let {search} = req.query;
+    let {orderBy}=req.query;
+    let {orderDir}=req.query;
+
     if (!search || search ==='undefined') {
         search = '';
     }
-    console.log(search);
+    if (!orderBy || orderBy ==='undefined') {
+        orderBy = 'id';
+    }
+    if (!orderDir || orderDir ==='undefined') {
+        orderDir = 'DESC';
+    }
+    console.log('search', search);
+    console.log('orderBy', orderBy);
+    console.log('orderDir', orderDir);
+
     try {
         const users = await User.findAndCountAll({
             attributes: ['id', 'username', 'status'],
